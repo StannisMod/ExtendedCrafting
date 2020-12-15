@@ -32,11 +32,19 @@ repositories {
 	maven {
 		url = "http://dvs1.progwml6.com/files/maven"
 	}
+    mavenLocal()
 }
 
 dependencies {
+    //сompile "mcp.mobius.waila:Hwyla:1.8.26-B41_1.12.2"
 	deobfCompile "mezz.jei:jei_1.12.2:4.15.0.268:api"
 	runtime "mezz.jei:jei_1.12.2:4.15.0.268"
+}
+
+jar {
+    manifest {
+        attributes 'FMLAT': 'config_at.cfg'
+    }
 }
 
 processResources {
@@ -56,6 +64,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 task deobfJar(type: Jar) {

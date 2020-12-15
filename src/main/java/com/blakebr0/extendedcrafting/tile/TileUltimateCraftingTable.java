@@ -1,7 +1,8 @@
 package com.blakebr0.extendedcrafting.tile;
 
+import com.blakebr0.extendedcrafting.InventoryCraftingRef;
+import com.blakebr0.extendedcrafting.crafting.table.TableRecipeManager;
 import com.blakebr0.extendedcrafting.lib.IExtendedTable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -14,7 +15,8 @@ import net.minecraft.util.NonNullList;
 
 public class TileUltimateCraftingTable extends TileEntity implements IInventory, IExtendedTable {
 
-	private NonNullList<ItemStack> matrix = NonNullList.withSize(81, ItemStack.EMPTY);
+	private final NonNullList<ItemStack> matrix = NonNullList.withSize(81, ItemStack.EMPTY);
+	private final InventoryCraftingRef inventoryCraftingRef = new InventoryCraftingRef(matrix, 9, 9);
 	private ItemStack result = ItemStack.EMPTY;
 
 	@Override
@@ -153,7 +155,13 @@ public class TileUltimateCraftingTable extends TileEntity implements IInventory,
 
 	@Override
 	public void clear() {
-		this.matrix = NonNullList.withSize(81, ItemStack.EMPTY);
+		this.matrix.clear();
 		this.setResult(ItemStack.EMPTY);
+	}
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		result = TableRecipeManager.getInstance().findMatchingRecipe(this.inventoryCraftingRef, this.getWorld());
 	}
 }
